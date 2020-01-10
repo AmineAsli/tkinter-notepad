@@ -1,4 +1,4 @@
-from tkinter import Tk, Text, Scrollbar
+from tkinter import Tk, Text, Scrollbar, Menu
 
 class NotepadView:
     APPLICATION_NAME = "Notepad"
@@ -10,6 +10,7 @@ class NotepadView:
     def setup_window(self):
         self.root.geometry(self.SCREEN_SIZE)
         self.root.title(self.APPLICATION_NAME)
+        self.setup_menu()
         self.setup_document_area()
         self.root.mainloop()
 
@@ -30,6 +31,19 @@ class NotepadView:
     def select_all(self, event=None):
         self.document_area.tag_add('sel', '1.0', 'end')
         return 'break'
+    
+    def cut(self):
+         self.document_area.event_generate('<<Cut>>')
+    
+    def copy(self):
+        self.document_area.event_generate('<<Copy>>')
+
+
+    def paste(self):
+        self.document_area.event_generate('<<Paste>>')
+
+    def undo(self):
+        self.document_area.event_generate('<<Undo>>')
 
     def redo(self, event=None):
         self.document_area.event_generate('<<Redo>>')
@@ -40,3 +54,21 @@ class NotepadView:
         self.document_area.bind('<Control-a>', self.select_all)
         self.document_area.bind('<Control-Y>', self.redo)
         self.document_area.bind('<Control-y>', self.redo)
+
+    def setup_menu(self):
+        menu_bar = Menu(self.root)
+
+        file_menu = Menu(menu_bar, tearoff=0)
+        file_menu.add_command(label="Exit", command=self.root.quit)
+        menu_bar.add_cascade(label="File", menu=file_menu)
+       
+        edit_menu = Menu(menu_bar, tearoff=0)
+        edit_menu.add_command(label="Undo", command=self.undo)
+        edit_menu.add_command(label="Redo", command=self.redo)
+        edit_menu.add_separator()
+        edit_menu.add_command(label="Cut", command=self.cut)
+        edit_menu.add_command(label="Copy", command=self.copy)
+        edit_menu.add_command(label="Paste", command=self.paste)
+        menu_bar.add_cascade(label="Edit", menu=edit_menu)
+
+        self.root.config(menu=menu_bar)
