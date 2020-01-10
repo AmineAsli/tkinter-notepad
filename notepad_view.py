@@ -29,9 +29,14 @@ class NotepadView:
 
     def select_all(self, event=None):
         self.document_area.tag_add('sel', '1.0', 'end')
-        return "break"
+        return 'break'
+
+    def redo(self, event=None):
+        self.document_area.event_generate('<<Redo>>')
+        return 'break'
     
     def bind_keyboard_events(self):
         self.document_area.bind('<Control-A>', self.select_all)
         self.document_area.bind('<Control-a>', self.select_all)
-
+        self.document_area.bind('<Control-Y>', self.redo)
+        self.document_area.bind('<Control-y>', self.redo)
