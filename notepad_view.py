@@ -1,7 +1,8 @@
-from tkinter import Tk, Text, Scrollbar, Menu
+from tkinter import Tk, Text, Scrollbar, Menu, messagebox
 
 class NotepadView:
     APPLICATION_NAME = "Notepad"
+    VERSION = '0.01'
     SCREEN_SIZE = '350x350'
 
     def __init__(self):
@@ -38,7 +39,6 @@ class NotepadView:
     def copy(self):
         self.document_area.event_generate('<<Copy>>')
 
-
     def paste(self):
         self.document_area.event_generate('<<Paste>>')
 
@@ -48,6 +48,9 @@ class NotepadView:
     def redo(self, event=None):
         self.document_area.event_generate('<<Redo>>')
         return 'break'
+    
+    def about(self):
+        messagebox.showinfo("About", f"{self.APPLICATION_NAME} {self.VERSION}")
     
     def bind_keyboard_events(self):
         self.document_area.bind('<Control-A>', self.select_all)
@@ -70,5 +73,9 @@ class NotepadView:
         edit_menu.add_command(label="Copy", command=self.copy)
         edit_menu.add_command(label="Paste", command=self.paste)
         menu_bar.add_cascade(label="Edit", menu=edit_menu)
+
+        help_menu = Menu(menu_bar, tearoff=0)
+        help_menu.add_command(label="About Notepad", command=self.about)
+        menu_bar.add_cascade(label="Help", menu=help_menu)
 
         self.root.config(menu=menu_bar)
