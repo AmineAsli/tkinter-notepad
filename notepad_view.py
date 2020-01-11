@@ -36,6 +36,10 @@ class NotepadView:
     def select_all(self, event=None):
         self.document_area.tag_add('sel', '1.0', 'end')
         return 'break'
+    
+    def new_file(self, event=None):
+        self.document_area.delete(1.0, END)
+        self.mediator.notify(self, 'new_file')
 
     def cut(self):
          self.document_area.event_generate('<<Cut>>')
@@ -66,7 +70,7 @@ class NotepadView:
         menu_bar = Menu(self.root)
 
         file_menu = Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="New", command='')
+        file_menu.add_command(label="New", command=self.new_file)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
