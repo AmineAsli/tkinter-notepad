@@ -1,16 +1,17 @@
-from tkinter import Tk, Text, Scrollbar, Menu, messagebox
+from tkinter import Tk, Text, Scrollbar, Menu, messagebox, END
 
 class NotepadView:
     APPLICATION_NAME = "Notepad"
     VERSION = '0.01'
     SCREEN_SIZE = '350x350'
 
-    def __init__(self):
+    def __init__(self, mediator):
         self.root = Tk()
-        
+        self.mediator = mediator
+
     def setup_window(self):
         self.root.geometry(self.SCREEN_SIZE)
-        self.root.title(self.APPLICATION_NAME)
+        self.change_title(self.APPLICATION_NAME)
         self.setup_menu()
         self.setup_document_area()
         self.root.mainloop()
@@ -29,10 +30,13 @@ class NotepadView:
         
         self.bind_keyboard_events()
 
+    def change_title(self, title):
+        self.root.title(title)
+
     def select_all(self, event=None):
         self.document_area.tag_add('sel', '1.0', 'end')
         return 'break'
-    
+
     def cut(self):
          self.document_area.event_generate('<<Cut>>')
     
@@ -62,6 +66,8 @@ class NotepadView:
         menu_bar = Menu(self.root)
 
         file_menu = Menu(menu_bar, tearoff=0)
+        file_menu.add_command(label="New", command='')
+        file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
        
