@@ -7,7 +7,7 @@ class NotepadView(Colleague):
     VERSION = '0.01'
     SCREEN_SIZE = '350x350'
 
-    def __init__(self):
+    def __init__(self, mediator):
         self.root = Tk()
         self.content = None
     
