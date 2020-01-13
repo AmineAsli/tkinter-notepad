@@ -1,4 +1,4 @@
-from tkinter import Tk, Text, Scrollbar, Menu, messagebox, END
+from tkinter import Tk, Text, Scrollbar, Menu, messagebox, filedialog, END
 from colleague import Colleague
 
 class NotepadView(Colleague):
@@ -8,6 +8,7 @@ class NotepadView(Colleague):
 
     def __init__(self):
         self.root = Tk()
+        self.content = None
     
     def setup_window(self):
         self.root.geometry(self.SCREEN_SIZE)
@@ -32,13 +33,13 @@ class NotepadView(Colleague):
 
     # Getter function
     @property
-    def filename(self):
-        return self._filename
+    def content(self):
+        return self._content
 
     # Setter function
-    @filename.setter
-    def filename(self, value):
-        self._filename = value
+    @content.setter
+    def content(self, value):
+        self._content = value
 
     def select_all(self, event=None):
         self.document_area.tag_add('sel', '1.0', 'end')
@@ -47,6 +48,15 @@ class NotepadView(Colleague):
     def new(self, event=None):
         self.filename = None
         self.document_area.delete(1.0, END)
+    
+    def open(self, event=None):
+        self.filename = filedialog.askopenfilename(defaultextension=".txt", 
+            filetypes=[("All Files", "*.*"),("Text Documents", "*.txt")])
+        if self.filename:
+            self.document_area.delete(1.0, END)
+            self.mediator.notify(self, 'open_file')
+            if self.content:
+                self.document_area.insert(1.0, self.content) 
     
     def cut(self):
          self.document_area.event_generate('<<Cut>>')
@@ -80,6 +90,7 @@ class NotepadView(Colleague):
 
         file_menu = Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="New", command=self.new)
+        file_menu.add_command(label="Open...", command=self.open)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
