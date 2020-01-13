@@ -1,6 +1,7 @@
 from tkinter import Tk, Text, Scrollbar, Menu, messagebox
+from colleague import Colleague
 
-class NotepadView:
+class NotepadView(Colleague):
     APPLICATION_NAME = "Notepad"
     VERSION = '0.01'
     SCREEN_SIZE = '350x350'
