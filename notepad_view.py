@@ -1,3 +1,4 @@
+import os
 from tkinter import Tk, Text, Scrollbar, Menu, messagebox, filedialog, END
 from colleague import Colleague
 
@@ -12,7 +13,7 @@ class NotepadView(Colleague):
     
     def setup_window(self):
         self.root.geometry(self.SCREEN_SIZE)
-        self.root.title(self.APPLICATION_NAME)
+        self.change_title(f"Untitled - {self.APPLICATION_NAME}")
         self.setup_menu()
         self.setup_document_area()
         self.root.mainloop()
@@ -41,18 +42,23 @@ class NotepadView(Colleague):
     def content(self, value):
         self._content = value
 
+    def change_title(self, title):
+        self.root.title(title)
+        
     def select_all(self, event=None):
         self.document_area.tag_add('sel', '1.0', 'end')
         return 'break'
     
     def new(self, event=None):
         self.filename = None
+        self.change_title(f"Untitled - {self.APPLICATION_NAME}")
         self.document_area.delete(1.0, END)
     
     def open(self, event=None):
         self.filename = filedialog.askopenfilename(defaultextension=".txt", 
             filetypes=[("All Files", "*.*"),("Text Documents", "*.txt")])
         if self.filename:
+            self.change_title(f"{os.path.basename(self.filename)} - {self.APPLICATION_NAME}")
             self.document_area.delete(1.0, END)
             self.mediator.notify(self, 'open_file')
             if self.content:
@@ -84,6 +90,8 @@ class NotepadView(Colleague):
         self.document_area.bind('<Control-y>', self.redo)
         self.document_area.bind('<Control-N>', self.new)
         self.document_area.bind('<Control-n>', self.new)
+        self.document_area.bind('<Control-O>', self.open)
+        self.document_area.bind('<Control-o>', self.open)
 
     def setup_menu(self):
         menu_bar = Menu(self.root)
