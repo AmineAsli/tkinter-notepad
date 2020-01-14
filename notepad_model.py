@@ -12,6 +12,10 @@ class NotepadModel(Colleague):
     def open_file(self, filename):
         self.filename = filename
         if self.filename:
-            with open(self.filename) as file:
-                self.filecontent = file.read()
-                self.mediator.notify(self, 'file_content')
+            try:
+                with open(self.filename) as file:
+                    self.filecontent = file.read()
+                    self.mediator.notify(self, 'file_content')
+            except Exception:
+                self.mediator.notify(self, 'error_file')
+            

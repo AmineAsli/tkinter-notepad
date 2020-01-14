@@ -7,7 +7,7 @@ class NotepadView(Colleague):
     VERSION = '0.01'
     SCREEN_SIZE = '350x350'
 
-    def __init__(self, mediator):
+    def __init__(self):
         self.root = Tk()
         self.content = None
     
@@ -32,15 +32,16 @@ class NotepadView(Colleague):
         
         self.bind_keyboard_events()
 
-    # Getter function
     @property
     def content(self):
         return self._content
 
-    # Setter function
     @content.setter
     def content(self, value):
         self._content = value
+
+    def show_error_message(self, error_message):
+        messagebox.showerror(title="Show Error", message=error_message)
 
     def change_title(self, title):
         self.root.title(title)

@@ -17,3 +17,6 @@ class NotepadController(Mediator):
             self.model.open_file(sender.filename)
         elif event == 'file_content':
             self.view.content = sender.filecontent
+        elif event =='error_file':
+            self.view.content = None
+            self.view.show_error_message('Error Opening File')
