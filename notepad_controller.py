@@ -19,9 +19,9 @@ class NotepadController(Mediator):
             self.view.content = sender.filecontent
         elif event == 'save_file':
             self.model.save_file(sender.filename, sender.content)
-        elif event =='error_file':
+        elif event == 'error_file':
             self.view.content = None
             self.view.show_error_message('Error Opening File')
-        elif event =='error_file_write':
+        elif event == 'error_file_write':
             self.view.content = None
             self.view.show_error_message('Error Writing File')
