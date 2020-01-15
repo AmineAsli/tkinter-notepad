@@ -10,6 +10,7 @@ class NotepadView(Colleague):
     def __init__(self):
         self.root = Tk()
         self.content = None
+        self.filename = None
     
     def setup_window(self):
         self.root.geometry(self.SCREEN_SIZE)
@@ -56,13 +57,15 @@ class NotepadView(Colleague):
         self.document_area.delete(1.0, END)
     
     def open(self, event=None):
-        self.filename = filedialog.askopenfilename(defaultextension=".txt", 
+        self.filename = filedialog.askopenfilename(
+            defaultextension=".txt", 
             filetypes=[("All Files", "*.*"),("Text Documents", "*.txt")])
+
         if self.filename:
-            self.change_title(f"{os.path.basename(self.filename)} - {self.APPLICATION_NAME}")
-            self.document_area.delete(1.0, END)
             self.mediator.notify(self, 'open_file')
             if self.content:
+                self.change_title(f"{os.path.basename(self.filename)} - {self.APPLICATION_NAME}")
+                self.document_area.delete(1.0, END)
                 self.document_area.insert(1.0, self.content) 
     
     def cut(self):
@@ -73,6 +76,25 @@ class NotepadView(Colleague):
 
     def paste(self):
         self.document_area.event_generate('<<Paste>>')
+
+    def save(self, event=None):
+        self.content = self.document_area.get(1.0, 'end')
+
+        if self.filename:
+            self.mediator.notify(self, 'save_file')  
+        else:
+            self.save_as()
+
+    def save_as(self):
+        filename = filedialog.asksaveasfilename(
+            defaultextension=".txt", 
+            filetypes=[("All Files", "*.*"),("Text Documents", "*.txt")])
+            
+        if filename:
+            self.filename = filename
+            self.change_title(f"{os.path.basename(self.filename)} - {self.APPLICATION_NAME}")
+            self.mediator.notify(self, 'save_file')
+        return 'break'
 
     def undo(self):
         self.document_area.event_generate('<<Undo>>')
@@ -93,6 +115,8 @@ class NotepadView(Colleague):
         self.document_area.bind('<Control-n>', self.new)
         self.document_area.bind('<Control-O>', self.open)
         self.document_area.bind('<Control-o>', self.open)
+        self.document_area.bind('<Control-S>', self.save)
+        self.document_area.bind('<Control-s>', self.save)
 
     def setup_menu(self):
         menu_bar = Menu(self.root)
@@ -100,6 +124,8 @@ class NotepadView(Colleague):
         file_menu = Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="New", command=self.new)
         file_menu.add_command(label="Open...", command=self.open)
+        file_menu.add_command(label="Save", command=self.save)
+        file_menu.add_command(label="Save...", command=self.save_as)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
