@@ -1,11 +1,9 @@
-
 class Colleague:
     """
     provides the basic functionality of storing a mediator's
     instance inside component objects.
     """
-
-    def __init__(self, mediator = None):
+    def __init__(self, mediator=None):
         self._mediator = mediator
 
     @property
