@@ -7,7 +7,7 @@ A Python/Tkinter clone for Notepad.
 Before running the application make sure that Tk and tkinter are properly installed on your system by executing: 
 `python -m tkinter` from the command line. This should open a window demonstrating a simple Tk interface.
 
-To run the application type the command bellow to:
+To run the application type the command bellow:
 ```
 python notepad.py
 ```
